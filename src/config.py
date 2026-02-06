@@ -15,7 +15,33 @@ LOG_DIR = PROJECT_ROOT / 'logs'
 # 模型参数
 MODEL_PARAMS = {
     'n_estimators': 100,
+    'max_depth': None,
+    'min_samples_split': 2,
+    'min_samples_leaf': 1,
     'random_state': 42
+}
+
+# 网格搜索参数
+GRID_SEARCH_PARAMS = {
+    'n_estimators': [50, 100, 200],
+    'max_depth': [3, 5, 7, 10, None],
+    'min_samples_split': [2, 5, 10],
+    'min_samples_leaf': [1, 2, 4]
+}
+
+# 随机搜索参数
+RANDOMIZED_SEARCH_PARAMS = {
+    'n_estimators': [50, 100, 200],
+    'max_depth': [3, 5, 7, 10, None],
+    'min_samples_split': [2, 5, 10],
+    'min_samples_leaf': [1, 2, 4]
+}
+
+# 搜索参数
+SEARCH_PARAMS = {
+    'cv': 5,
+    'n_jobs': -1,
+    'verbose': 1
 }
 
 # 训练参数
