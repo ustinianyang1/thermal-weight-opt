@@ -29,8 +29,6 @@ logs/
 *.log
 
 # Data
-data/
-*.csv
 *.xlsx
 
 # Checkpoints
