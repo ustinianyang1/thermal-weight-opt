@@ -1,103 +1,35 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import os
+from .config import VIS_DIR
 from .logger import logger
 
-# 设置中文字体，解决中文乱码问题
-plt.rcParams['font.sans-serif'] = ['SimHei']  # 使用黑体
-plt.rcParams['axes.unicode_minus'] = False  # 解决负号显示问题
+# 中文显示配置
+plt.rcParams.update({'font.sans-serif': ['SimHei'], 'axes.unicode_minus': False})
 
-class Visualizer:
-    def __init__(self, output_dir='visualize'):
-        """
-        可视化工具初始化
-        
-        Args:
-            output_dir: 可视化结果输出目录
-        """
-        self.output_dir = output_dir
-        
-        # 确保输出目录存在
-        os.makedirs(output_dir, exist_ok=True)
-    
-    def plot_feature_importance(self, feature_importance, feature_names, filename='feature_importance.png'):
-        """
-        绘制特征重要性图
-        
-        Args:
-            feature_importance: 特征重要性数组
-            feature_names: 特征名称列表
-            filename: 输出文件名
-        """
-        try:
-            logger.info("开始绘制特征重要性图")
-            
-            # 创建图形
-            plt.figure(figsize=(12, 8))
-            
-            # 排序特征重要性
-            sorted_indices = np.argsort(feature_importance)
-            sorted_importance = feature_importance[sorted_indices]
-            sorted_features = [feature_names[i] for i in sorted_indices]
-            
-            # 绘制水平条形图
-            plt.barh(range(len(sorted_importance)), sorted_importance, align='center')
-            plt.yticks(range(len(sorted_importance)), sorted_features, fontsize=10)
-            plt.xlabel('重要性', fontsize=12)
-            plt.ylabel('特征', fontsize=12)
-            plt.title('随机森林模型特征重要性', fontsize=14, fontweight='bold')
-            plt.tight_layout()
-            
-            # 保存图形
-            output_path = os.path.join(self.output_dir, filename)
-            plt.savefig(output_path, dpi=300, bbox_inches='tight')
-            plt.close()
-            
-            logger.info(f"特征重要性图已保存到: {output_path}")
-            return output_path
-        except Exception as e:
-            logger.error(f"绘制特征重要性图失败: {str(e)}")
-            raise
-    
-    def plot_evaluation_metrics(self, metrics, filename='evaluation_metrics.png'):
-        """
-        绘制评估指标图
-        
-        Args:
-            metrics: 评估指标字典
-            filename: 输出文件名
-        """
-        try:
-            logger.info("开始绘制评估指标图")
-            
-            # 创建图形
-            plt.figure(figsize=(10, 6))
-            
-            metric_names = list(metrics.keys())
-            metric_values = list(metrics.values())
-            
-            # 绘制条形图
-            plt.bar(metric_names, metric_values, color=['blue', 'green', 'orange'])
-            plt.xlabel('评估指标', fontsize=12)
-            plt.ylabel('值', fontsize=12)
-            plt.title('模型评估指标', fontsize=14, fontweight='bold')
-            
-            # 在条形上添加数值
-            for i, v in enumerate(metric_values):
-                plt.text(i, v + 0.01, f'{v:.4f}', ha='center', fontsize=10)
-            
-            plt.tight_layout()
-            
-            # 保存图形
-            output_path = os.path.join(self.output_dir, filename)
-            plt.savefig(output_path, dpi=300, bbox_inches='tight')
-            plt.close()
-            
-            logger.info(f"评估指标图已保存到: {output_path}")
-            return output_path
-        except Exception as e:
-            logger.error(f"绘制评估指标图失败: {str(e)}")
-            raise
+def _save_and_close(name):
+    # 保存图表到指定目录
+    os.makedirs(VIS_DIR, exist_ok=True)
+    path = VIS_DIR / name
+    plt.savefig(path, dpi=300, bbox_inches='tight')
+    plt.close()
+    logger.info(f"可视化文件已生成: {path}")
 
-# 创建全局可视化实例
-visualizer = Visualizer()
+def plot_importance(importances, names):
+    # 绘制特征重要性排序图
+    indices = np.argsort(importances)
+    plt.figure(figsize=(10, 6))
+    plt.barh(range(len(indices)), importances[indices], align='center')
+    plt.yticks(range(len(indices)), [names[i] for i in indices])
+    plt.title('RF 特征重要性分析')
+    _save_and_close('feature_importance.png')
+
+def plot_metrics(metrics):
+    # 绘制模型评估指标柱状图
+    plt.figure(figsize=(8, 5))
+    keys, values = list(metrics.keys()), list(metrics.values())
+    plt.bar(keys, values, color=['skyblue', 'orange', 'green'])
+    for i, v in enumerate(values):
+        plt.text(i, v, f'{v:.4f}', ha='center', va='bottom')
+    plt.title('模型综合性能指标')
+    _save_and_close('evaluation_metrics.png')

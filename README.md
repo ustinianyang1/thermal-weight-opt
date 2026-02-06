@@ -137,19 +137,18 @@ logger.info("信息日志")
 ## 示例运行结果
 
 ```text
-[INFO] === 材料性能预测程序启动 ===
-[INFO] 设置随机种子: 42
-[INFO] 加载数据文件: .../data/raw/materials.csv
-[INFO] 成功加载 64 行数据
-[INFO] 特征列: ['P(W)', 'V(mm/s)', 'H(um)', 'T(um)', 'Density(%)', 'Hardness(HRA)', 'E(MPa)', 'UTS(MPa)', 'EL(%)']
-[INFO] 目标列: YS(MPa)
-[INFO] 训练集大小: 51, 测试集大小: 13
-[INFO] 模型训练完成
-[INFO] 模型准确度: 56.70%
-[INFO] 预测新材料性能
-[INFO] 预测结果: 493.55 MPa
-[INFO] === 程序执行完成 ===
-
+[INFO] === 材料性能预测系统启动 ===
+[INFO] 系统种子已设为: 42
+[INFO] 发现缓存，跳过预处理
+[INFO] 开始网格搜索调优...
+[INFO] 最佳参数: {'max_depth': 10, 'min_samples_leaf': 1, 'min_samples_split': 5, 'n_estimators': 200}
+[INFO] R2: 0.5729
+[INFO] MAE: 6.6964
+[INFO] RMSE: 10.5812
+[INFO] 可视化文件已生成: D:\python\thermal-weight-opt\visualize\feature_importance.png
+[INFO] 可视化文件已生成: D:\python\thermal-weight-opt\visualize\evaluation_metrics.png
+[INFO] 新材料预测屈服强度: 493.45 MPa
+[INFO] === 任务成功完成 ===
 ```
 
 ## 许可证
